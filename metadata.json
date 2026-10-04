@@ -1,0 +1,12 @@
+{
+  "name": "DoSJE Drishti - Real-Time Monitoring & Surprise Inspection System",
+  "description": "Centralized real-time monitoring, AI-driven surprise inspection assignment, CCTV feed integration, GPS-verified evidence capture, and anomaly analytics for DoSJE schemes.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

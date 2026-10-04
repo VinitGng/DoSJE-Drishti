@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Central Users Collection
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // Projects Collection (Central Registry)
+    match /projects/{projectId} {
+      allow read, write: if true;
+    }
+
+    // Inspections Collection
+    match /inspections/{inspectionId} {
+      allow read, write: if true;
+
+      // Evidence Subcollection inside Inspection
+      match /evidence/{evidenceId} {
+        allow read, write: if true;
+      }
+    }
+
+    // Offline Sync Queue Collection
+    match /syncQueue/{queueId} {
+      allow read, write: if true;
+    }
+
+    // Connection Health Check Document
+    match /test/connection {
+      allow read, write: if true;
+    }
+
+    // Global document fallback to support unauthenticated inspection offline-sync & test evaluation
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

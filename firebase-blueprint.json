@@ -1,0 +1,118 @@
+{
+  "entities": {
+    "Project": {
+      "title": "Project",
+      "description": "Registered welfare institute and rehabilitation facility under DoSJE schemes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 256 },
+        "scheme": { "type": "string", "maxLength": 256 },
+        "ngoName": { "type": "string", "maxLength": 256 },
+        "regNumber": { "type": "string", "maxLength": 128 },
+        "state": { "type": "string", "maxLength": 128 },
+        "district": { "type": "string", "maxLength": 128 },
+        "address": { "type": "string", "maxLength": 512 },
+        "beneficiaryCount": { "type": "number" },
+        "latestAttendance": { "type": "number" },
+        "historicalAvgAttendance": { "type": "number" },
+        "attendanceAnomaly": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["normal", "flagged", "under_inspection", "action_pending"] },
+        "riskScore": { "type": "number" },
+        "grantAmountAnnual": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "scheme", "status"]
+    },
+    "Inspection": {
+      "title": "Inspection",
+      "description": "Surprise audit or scheduled compliance inspection assigned to PMU inspection teams",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "projectId": { "type": "string", "maxLength": 128 },
+        "projectName": { "type": "string", "maxLength": 256 },
+        "scheme": { "type": "string", "maxLength": 256 },
+        "assignedTeamId": { "type": "string", "maxLength": 128 },
+        "inspectorName": { "type": "string", "maxLength": 128 },
+        "inspectorId": { "type": "string", "maxLength": 128 },
+        "assignedDate": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["assigned", "in_progress", "submitted", "approved", "show_cause_issued", "re_inspection_ordered"] },
+        "overallRating": { "type": "string", "enum": ["Satisfactory", "Minor Discrepancies", "Critical Violations", "Pending Evaluation"] },
+        "inspectorRemarks": { "type": "string", "maxLength": 2048 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "projectId", "status"]
+    },
+    "Evidence": {
+      "title": "Evidence",
+      "description": "Real-time geo-tagged photographic evidence recorded by inspectors on-site",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "inspectionId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "category": { "type": "string", "maxLength": 128 },
+        "imageUrl": { "type": "string", "maxLength": 2048 },
+        "timestamp": { "type": "string", "maxLength": 128 },
+        "locationName": { "type": "string", "maxLength": 256 },
+        "inspectorId": { "type": "string", "maxLength": 128 },
+        "inspectorName": { "type": "string", "maxLength": 128 },
+        "note": { "type": "string", "maxLength": 1024 },
+        "syncedOffline": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "inspectionId", "title"]
+    },
+    "SyncQueueItem": {
+      "title": "SyncQueueItem",
+      "description": "Locally queued inspection data and evidence items pending remote sync to central database",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "inspectionId": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "enum": ["evidence", "inspection_update", "attendance_sync"] },
+        "status": { "type": "string", "enum": ["pending", "synced", "failed"] },
+        "payloadJson": { "type": "string", "maxLength": 1048576 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "inspectionId", "type", "status"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user profile for Government officials, PMU inspectors, and NGO in-charges",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 256 },
+        "role": { "type": "string", "enum": ["government", "inspector", "ngo"] },
+        "designation": { "type": "string", "maxLength": 256 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    }
+  },
+  "firestore": {
+    "/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/Project" },
+      "description": "Collection of nationwide welfare projects monitored by DoSJE"
+    },
+    "/inspections/{inspectionId}": {
+      "schema": { "$ref": "#/entities/Inspection" },
+      "description": "Collection of unannounced surprise inspections and regular audit cases"
+    },
+    "/inspections/{inspectionId}/evidence/{evidenceId}": {
+      "schema": { "$ref": "#/entities/Evidence" },
+      "description": "Subcollection of real-time GPS-tagged photo evidence for an inspection"
+    },
+    "/syncQueue/{queueId}": {
+      "schema": { "$ref": "#/entities/SyncQueueItem" },
+      "description": "Queue records tracking offline-generated inspection submissions and their sync status"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Registered and authenticated user profiles"
+    }
+  }
+}
