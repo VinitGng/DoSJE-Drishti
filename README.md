@@ -386,7 +386,7 @@ This creates a closed-loop monitoring process rather than stopping at inspection
 ### Frontend
 
 * React
-* TypeScript
+* TypeScript / TSX
 * Vite
 * Tailwind CSS
 * React Router
@@ -407,20 +407,37 @@ This creates a closed-loop monitoring process rather than stopping at inspection
 ### AI
 
 * Google Gemini API
-* AI-assisted evidence analysis
-* Attendance anomaly detection
+* AI-assisted inspection evidence analysis
+* Attendance anomaly analysis
+* AI-generated inspection insights
 
 ### Maps & Location
 
 * Browser Geolocation API
+* GPS-based inspector verification
 * Geofencing
 * Map integration
 
-### Storage / Evidence
+### Inspection Evidence
 
-* Secure object storage architecture
-* Geo-tagged inspection evidence
+* Camera-based evidence capture
+* Geo-tagged evidence
+* Timestamped inspection evidence
+* Evidence metadata and verification
+* SHA-256 evidence integrity *(if implemented in your latest backend)*
 
+### Monitoring & Communication
+
+* CCTV monitoring interface
+* Video conferencing interface
+* Inspector live-location tracking
+* Real-time monitoring dashboard
+
+### Offline & Reliability
+
+* Offline inspection workflow
+* Local evidence/inspection queue
+* Automatic synchronization when connectivity is restored
 ---
 
 # 🔐 Security
